@@ -132,8 +132,11 @@ def cleanspaces():
             valueslist = [p25-1.5*iqr, min, p25, p50, mean, p75, max, p75 + 1.5*iqr]
             tagslist = ["LOWER", "MIN", "P25", "P50", "Mean", "P75", "MAX", "UPPER"]
             data.update({column : pd.Series([df[column].dtypes]+valueslist, index=["Type"]+tagslist)})
+# If it is binary don't detect outliers
+            if (set(df[column]) == {0,1}):
+                continue
 # Loops the values in a column looking for extreme values
-# When it finds extreme values prepares the interface to sustitute it, offering several choices
+# When it finds extreme values prepares the interface to sustitute them, offering several choices
             for i in range (0,len(df)):
                 if (df[column][i] > (p75 + 1.5*iqr)) or (df[column][i] < (p25 - 1.5*iqr)):
                     if first:
