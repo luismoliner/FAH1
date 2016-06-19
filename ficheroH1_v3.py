@@ -73,6 +73,7 @@ def cleannan():
 
 # Prepare intereface to remove whitespaces from columns if all the values can be numeric
     c=0
+    first = True
     for column in df.columns:
         if df[column].dtypes in ["object"]:
             change = True
@@ -81,8 +82,10 @@ def cleannan():
                     if (not pd.isnull(df[column][i]) and df[column][i].strip() != ''):
                         change = False
             if change:
-                a = tk.Label(win_root, text="Do you want to remove whitespaces from numeric columns?")
-                a.grid(row=4, column=0, sticky=tk.W, columnspan=2)
+                if first:
+                    a = tk.Label(win_root, text="Do you want to remove whitespaces from numeric columns?")
+                    a.grid(row=4, column=0, sticky=tk.W, columnspan=2)
+                    first=False
                 a = tk.Label(win_root, text=column)
                 a.grid(row=5+c, column=0, sticky=tk.E)
                 enval = tk.StringVar()
@@ -132,6 +135,7 @@ def cleanspaces():
             valueslist = [p25-1.5*iqr, min, p25, p50, mean, p75, max, p75 + 1.5*iqr]
             tagslist = ["LOWER", "MIN", "P25", "P50", "Mean", "P75", "MAX", "UPPER"]
             data.update({column : pd.Series([df[column].dtypes]+valueslist, index=["Type"]+tagslist)})
+            print ("\nInfo about the columns to transform:\n", pd.DataFrame(data),"\n")
 # If it is binary don't detect outliers
             if (set(df[column]) == {0,1}):
                 continue
